@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>新加坡租房看板</title>
+<style>
+:root {
+  --bg: #f6f5f2; --card: #ffffff; --ink: #1d1d1b; --mute: #6b6a66; --line: #e4e2dc;
+  --accent: #0f7b5f; --accent-soft: #e3f2ec; --warn: #a15c00; --warn-soft: #fbefdc; --bad: #b3261e; --chip: #efeee9;
+  --shadow: 0 1px 2px rgba(0,0,0,.05), 0 4px 16px rgba(0,0,0,.04);
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #141413; --card: #1e1e1c; --ink: #ecebe6; --mute: #9d9b94; --line: #2f2e2b;
+    --accent: #4cc39b; --accent-soft: #17352b; --warn: #e3a64f; --warn-soft: #3a2c16; --bad: #f08a80; --chip: #2a2927;
+    --shadow: none;
+  }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.5 -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans TC", sans-serif; }
+header { padding: 20px 16px 8px; max-width: 1200px; margin: 0 auto; }
+h1 { font-size: 22px; margin: 0 0 4px; letter-spacing: .01em; }
+.sub { color: var(--mute); font-size: 13px; }
+.filters { position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--bg) 92%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+.filters .in { max-width: 1200px; margin: 0 auto; padding: 10px 16px; display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; }
+.seg { display: inline-flex; background: var(--chip); border-radius: 9px; padding: 3px; }
+.seg button { border: 0; background: none; color: var(--mute); padding: 5px 10px; border-radius: 7px; font: inherit; font-size: 13px; cursor: pointer; }
+.seg button.on { background: var(--card); color: var(--ink); box-shadow: var(--shadow); }
+label.f { font-size: 13px; color: var(--mute); display: inline-flex; gap: 6px; align-items: center; }
+label.f output { color: var(--ink); font-variant-numeric: tabular-nums; min-width: 3.2em; }
+select, input[type=range] { accent-color: var(--accent); font: inherit; font-size: 13px; }
+select { background: var(--card); color: var(--ink); border: 1px solid var(--line); border-radius: 7px; padding: 4px 6px; }
+.count { margin-left: auto; font-size: 13px; color: var(--mute); }
+main { max-width: 1200px; margin: 0 auto; padding: 16px; display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; box-shadow: var(--shadow); display: flex; flex-direction: column; }
+.ph { position: relative; aspect-ratio: 4/3; background: var(--chip); overflow: hidden; }
+.ph img { width: 100%; height: 100%; object-fit: cover; display: block; cursor: zoom-in; }
+.ph .none { position: absolute; inset: 0; display: grid; place-items: center; color: var(--mute); font-size: 13px; }
+.ph .nav { position: absolute; top: 50%; transform: translateY(-50%); border: 0; width: 32px; height: 32px; border-radius: 50%; background: rgba(0,0,0,.45); color: #fff; font-size: 18px; cursor: pointer; }
+.ph .prev { left: 8px; } .ph .next { right: 8px; }
+.ph .n { position: absolute; right: 8px; bottom: 8px; background: rgba(0,0,0,.55); color: #fff; font-size: 12px; padding: 2px 7px; border-radius: 10px; }
+.ph .badge { position: absolute; left: 8px; top: 8px; font-size: 12px; font-weight: 600; padding: 3px 8px; border-radius: 8px; }
+.badge.good { background: var(--accent); color: #fff; } .badge.maybe { background: var(--warn); color: #fff; }
+.body { padding: 12px 14px 14px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+.top { display: flex; align-items: baseline; gap: 8px; }
+.rent { font-size: 22px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.rent small { font-size: 13px; color: var(--mute); font-weight: 400; }
+.score { margin-left: auto; font-size: 12px; color: var(--mute); }
+.score b { color: var(--ink); font-size: 15px; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { background: var(--chip); border-radius: 7px; padding: 2px 8px; font-size: 12.5px; }
+.chip.west { background: var(--accent-soft); color: var(--accent); }
+.flags { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; font-size: 12.5px; }
+.flag { text-align: center; padding: 4px 0; border-radius: 7px; background: var(--chip); }
+.flag.y { background: var(--accent-soft); color: var(--accent); } .flag.n { color: var(--bad); } .flag.u { color: var(--mute); }
+.notes { font-size: 14px; }
+.ask { font-size: 12.5px; color: var(--warn); background: var(--warn-soft); border-radius: 8px; padding: 6px 9px; }
+.addr { font-size: 12.5px; color: var(--mute); }
+details { font-size: 13px; color: var(--mute); }
+details p { white-space: pre-wrap; color: var(--ink); margin: 6px 0 0; max-height: 260px; overflow: auto; }
+.foot { display: flex; gap: 10px; align-items: center; font-size: 12.5px; color: var(--mute); margin-top: auto; padding-top: 4px; border-top: 1px dashed var(--line); }
+.foot a { color: var(--accent); text-decoration: none; font-weight: 600; }
+.foot .contact { margin-left: auto; color: var(--ink); }
+.empty { grid-column: 1/-1; text-align: center; color: var(--mute); padding: 60px 0; }
+.lb { position: fixed; inset: 0; background: rgba(0,0,0,.88); display: none; place-items: center; z-index: 20; }
+.lb.on { display: grid; } .lb img { max-width: 94vw; max-height: 90vh; }
+@media (max-width: 480px) { main { grid-template-columns: 1fr; padding: 12px; } .count { margin-left: 0; width: 100%; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>新加坡租房看板</h1>
+  <div class="sub" id="sub"></div>
+</header>
+<div class="filters"><div class="in">
+  <div class="seg" id="verdict"><button data-v="good" class="on">推薦</button><button data-v="all">推薦＋待確認</button></div>
+  <label class="f">月租 ≤ <input type="range" id="rent" min="500" max="3000" step="100" value="3000"><output id="rentO"></output></label>
+  <label class="f">通勤 ≤ <input type="range" id="commute" min="10" max="30" step="1" value="30"><output id="commuteO"></output></label>
+  <label class="f">房型 <select id="room"><option value="">全部</option><option value="common">Common</option><option value="master">Master</option><option value="studio">Studio</option><option value="whole_unit">整套</option></select></label>
+  <label class="f"><input type="checkbox" id="west"> 只看綠線往西</label>
+  <label class="f">排序 <select id="sort"><option value="score">分數</option><option value="rent">租金低→高</option><option value="commute">通勤短→長</option><option value="new">最新貼文</option></select></label>
+  <span class="count" id="count"></span>
+</div></div>
+<main id="list"></main>
+<div class="lb" id="lb"><img alt=""></div>
+<script src="data.js"></script>
+<script>
+const D = window.RENTALS || { generated: "", criteria: {}, listings: [] };
+const $ = (s) => document.querySelector(s);
+const ROOM = { common: "Common", master: "Master", studio: "Studio", whole_unit: "整套", other: "其他" };
+const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const state = { verdict: "good" };
+try { Object.assign(state, JSON.parse(localStorage.getItem("sgr") || "{}")); } catch {}
+for (const k of ["rent", "commute", "room", "sort"]) if (state[k] != null) $("#" + k).value = state[k];
+$("#west").checked = Boolean(state.west);
+document.querySelectorAll("#verdict button").forEach((b) => b.classList.toggle("on", b.dataset.v === state.verdict));
+
+$("#sub").textContent = `${D.listings.length} 間符合條件或待確認 · 資料更新 ${D.generated} · 通勤以到 Tanjong Pagar（CapitaSky）估算`;
+
+const flag = (v, label) => `<div class="flag ${v === 1 ? "y" : v === 0 ? "n" : "u"}">${v === 1 ? "✓" : v === 0 ? "✗" : "?"} ${label}</div>`;
+const ownerFlag = (v) => flag(v === 0 ? 1 : v === 1 ? 0 : null, "無房東");
+
+function card(l) {
+  const photos = l.photos || [];
+  const asks = (l.reasons || "").split("；").filter((r) => /未知|要問|待查/.test(r));
+  const date = l.posted_at ? l.posted_at.slice(0, 10) : "";
+  return `<article class="card" data-i="0">
+    <div class="ph">${photos.length ? `<img src="${esc(photos[0])}" loading="lazy" alt="">` : `<div class="none">沒有照片</div>`}
+      <span class="badge ${l.verdict}">${l.verdict === "good" ? "推薦" : "待確認"}</span>
+      ${photos.length > 1 ? `<button class="nav prev" aria-label="上一張">‹</button><button class="nav next" aria-label="下一張">›</button><span class="n">1/${photos.length}</span>` : ""}
+    </div>
+    <div class="body">
+      <div class="top"><span class="rent">${l.rent ? "S$" + Math.round(l.rent).toLocaleString() : "租金?"}<small> /月</small></span><span class="score">分數 <b>${l.score}</b></span></div>
+      <div class="meta">
+        <span class="chip">${ROOM[l.room_type] || "房型?"}</span>
+        ${l.property ? `<span class="chip">${esc(l.property)}</span>` : ""}
+        <span class="chip ${l.west ? "west" : ""}">🚇 ${esc(l.mrt || "地點?")}${l.walk_min ? ` · 走 ${l.walk_min} 分` : ""}</span>
+        ${l.commute_min ? `<span class="chip">通勤約 ${l.commute_min} 分</span>` : ""}
+        ${l.available ? `<span class="chip">${esc(l.available)} 起</span>` : ""}
+        ${l.agent === 0 ? `<span class="chip">屋主直租</span>` : l.agent === 1 ? `<span class="chip">仲介</span>` : ""}
+      </div>
+      <div class="flags">${ownerFlag(l.owner_lives_in)}${flag(l.cooking, "可煮")}${flag(l.window, "窗戶")}${flag(l.aircon, "冷氣")}</div>
+      ${l.notes ? `<div class="notes">${esc(l.notes)}</div>` : ""}
+      ${asks.length ? `<div class="ask">要問：${asks.map(esc).join("、")}</div>` : ""}
+      ${l.address ? `<div class="addr">📍 ${esc(l.address)}</div>` : ""}
+      <details><summary>原文</summary><p>${esc(l.text)}</p></details>
+      <div class="foot"><a href="${esc(l.url)}" target="_blank" rel="noopener">Facebook 原文 ↗</a><span>${esc(date)} · ${esc(l.grp || "")}</span>${l.contact ? `<span class="contact">${esc(l.contact)}</span>` : ""}</div>
+    </div>
+  </article>`;
+}
+
+function render() {
+  const rent = +$("#rent").value, commute = +$("#commute").value, room = $("#room").value, west = $("#west").checked, sort = $("#sort").value;
+  $("#rentO").textContent = "S$" + rent; $("#commuteO").textContent = commute + " 分";
+  Object.assign(state, { rent, commute, room, west, sort });
+  try { localStorage.setItem("sgr", JSON.stringify(state)); } catch {}
+  let xs = D.listings.filter((l) => (state.verdict === "all" || l.verdict === "good")
+    && (l.rent == null || l.rent <= rent) && (l.commute_min == null || l.commute_min <= commute)
+    && (!room || l.room_type === room) && (!west || l.west));
+  const by = { score: (a, b) => b.score - a.score, rent: (a, b) => (a.rent ?? 1e9) - (b.rent ?? 1e9), commute: (a, b) => (a.commute_min ?? 99) - (b.commute_min ?? 99), new: (a, b) => (b.posted_at || "").localeCompare(a.posted_at || "") }[sort];
+  xs.sort(by);
+  $("#count").textContent = `顯示 ${xs.length} 間`;
+  $("#list").innerHTML = xs.length ? xs.map(card).join("") : `<div class="empty">沒有符合篩選的房源，放寬條件看看。</div>`;
+  $("#list").querySelectorAll(".card").forEach((el, i) => (el.photos = xs[i].photos || []));
+}
+
+document.querySelectorAll("#verdict button").forEach((b) => b.onclick = () => { state.verdict = b.dataset.v; document.querySelectorAll("#verdict button").forEach((x) => x.classList.toggle("on", x === b)); render(); });
+for (const id of ["rent", "commute", "room", "west", "sort"]) $("#" + id).addEventListener("input", render);
+$("#list").addEventListener("click", (e) => {
+  const card = e.target.closest(".card"); if (!card) return;
+  if (e.target.matches(".nav")) {
+    const n = card.photos.length; let i = +card.dataset.i + (e.target.matches(".next") ? 1 : -1); i = (i + n) % n; card.dataset.i = i;
+    card.querySelector(".ph img").src = card.photos[i]; card.querySelector(".ph .n").textContent = `${i + 1}/${n}`;
+  } else if (e.target.matches(".ph img")) { $("#lb img").src = e.target.src; $("#lb").classList.add("on"); }
+});
+$("#lb").onclick = () => $("#lb").classList.remove("on");
+render();
+</script>
+</body>
+</html>
