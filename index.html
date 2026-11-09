@@ -60,7 +60,7 @@ main { max-width: 1200px; margin: 0 auto; padding: 16px; display: grid; grid-tem
 details { font-size: 13px; color: var(--mute); }
 details p { white-space: pre-wrap; color: var(--ink); margin: 6px 0 0; max-height: 260px; overflow: auto; }
 .foot { display: flex; gap: 10px; align-items: center; font-size: 12.5px; color: var(--mute); margin-top: auto; padding-top: 4px; border-top: 1px dashed var(--line); }
-.foot a { color: var(--accent); text-decoration: none; font-weight: 600; }
+.foot a { color: var(--accent); text-decoration: none; font-weight: 600; white-space: nowrap; }
 .foot .contact { margin-left: auto; color: var(--ink); }
 .empty { grid-column: 1/-1; text-align: center; color: var(--mute); padding: 60px 0; }
 .lb { position: fixed; inset: 0; background: rgba(0,0,0,.88); display: none; place-items: center; z-index: 20; }
@@ -114,7 +114,7 @@ function card(l) {
       <div class="top"><span class="rent">${l.rent ? "S$" + Math.round(l.rent).toLocaleString() : "租金?"}<small> /月</small></span><span class="score">分數 <b>${l.score}</b></span></div>
       <div class="meta">
         <span class="chip">${ROOM[l.room_type] || "房型?"}</span>
-        ${l.property ? `<span class="chip">${esc(l.property)}</span>` : ""}
+        ${l.property && l.property !== "other" ? `<span class="chip">${esc(l.property)}</span>` : ""}
         <span class="chip ${l.west ? "west" : ""}">🚇 ${esc(l.mrt || "地點?")}${l.walk_min ? ` · 走 ${l.walk_min} 分` : ""}</span>
         ${l.commute_min ? `<span class="chip">通勤約 ${l.commute_min} 分</span>` : ""}
         ${l.available ? `<span class="chip">${esc(l.available)} 起</span>` : ""}
